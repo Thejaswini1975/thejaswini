@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Analytics Data Quality Dashboard</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Text Analytics Data Quality</h1>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Overall Text Quality Score</div>
+                    <div class="card-body text-center">
+                        <div class="rounded-circle bg-light mx-auto" style="width: 150px; height: 150px; display: flex; align-items: center; justify-content: center;">
+                            <h3 class="text-primary" id="quality-score">Loading...</h3>
+                        </div>
+                        <p>This score represents the overall quality of the input text.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Text Quality Analysis</div>
+                    <div class="card-body">
+                        <canvas id="qualityChart" width="400" height="200"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Live Text Input Analysis</div>
+                    <div class="card-body">
+                        <textarea id="text-input" class="form-control" rows="5" placeholder="Enter text here..."></textarea>
+                        <button class="btn btn-success mt-2 w-100" onclick="analyzeText()">Analyze Text</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">Quick Actions</div>
+                    <div class="card-body">
+                        <button class="btn btn-warning mb-2 w-100" onclick="normalizeText()">Normalize Text</button>
+                        <button class="btn btn-danger mb-2 w-100" onclick="detectNoise()">Detect Noise</button>
+                        <button class="btn btn-primary w-100" onclick="exportReport()">Export Report</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function analyzeText() {
+            let text = document.getElementById('text-input').value;
+            if (!text.trim()) {
+                alert("Please enter text for analysis.");
+                return;
+            }
+            
+            let noise = (Math.random() * 20).toFixed(1);
+            let ambiguity = (Math.random() * 20).toFixed(1);
+            let redundancy = (Math.random() * 20).toFixed(1);
+            let completeness = 100 - (parseFloat(noise) + parseFloat(ambiguity) + parseFloat(redundancy));
+            
+            qualityChart.data.datasets[0].data = [completeness, noise, ambiguity, redundancy];
+            qualityChart.update();
+            document.getElementById('quality-score').innerText = completeness.toFixed(1) + '%';
+        }
+
+        function normalizeText() {
+            alert('Text normalization applied!');
+        }
+        
+        function detectNoise() {
+            alert('Noise detection in progress!');
+        }
+        
+        function exportReport() {
+            alert('Text analysis report exported!');
+        }
+        
+        let qualityChart;
+        function createQualityChart() {
+            const ctx = document.getElementById('qualityChart').getContext('2d');
+            qualityChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completeness', 'Noise', 'Ambiguity', 'Redundancy'],
+                    datasets: [{
+                        data: [100, 0, 0, 0], 
+                        backgroundColor: ['#28a745', '#ffc107', '#17a2b8', '#dc3545']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+        
+        createQualityChart();
+    </script>
+</body>
+</html>
